@@ -1,8 +1,8 @@
 
 /*
   Name: Utkrista Mardan Basnyat
-  Course: COMSC-210 Data Structures.
-  Lab 23: Goat Manager 3001
+  Course: COMSC-210 Data Structures
+  Lab 24: Goat Manager 3002
   File: Goat.h
 */
 
@@ -71,6 +71,17 @@ public:
 
   string get_color() const {
     return color;
+  }
+
+  // compare goats for sorting in a set
+  bool operator<(const Goat &other) const {
+    if (name != other.name)
+      return name < other.name;
+
+    if (age != other.age)
+      return age < other.age;
+
+    return color < other.color;
   }
 };
 
