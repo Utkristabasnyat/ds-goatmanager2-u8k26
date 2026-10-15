@@ -2,13 +2,13 @@
 /*
   Name: Utkrista Mardan Basnyat
   Course: COMSC-210 Data Structures
-  Lab 23: Goat Manager 3001
+  Lab 24: Goat Manager 3002
   File: main.cpp
 */
 
 #include <iostream>
 #include <fstream>
-#include <list>
+#include <set>
 #include <string>
 #include <cstdlib>
 #include <ctime>
@@ -19,10 +19,10 @@ using namespace std;
 
 const int SZ_NAMES = 200, SZ_COLORS = 25, MAX_AGE = 20;
 
-int select_goat(list<Goat> trip);
-void delete_goat(list<Goat> &trip);
-void add_goat(list<Goat> &trip, string [], string []);
-void display_trip(list<Goat> trip);
+int select_goat(set<Goat> trip);
+void delete_goat(set<Goat> &trip);
+void add_goat(set<Goat> &trip, string [], string []);
+void display_trip(set<Goat> trip);
 int main_menu();
 
 int main() {
@@ -54,7 +54,8 @@ int main() {
     return 1;
   }
 
-  list<Goat> trip;
+  // store goats in a set
+  set<Goat> trip;
   bool again = true;
 
   while (again) {
@@ -103,24 +104,31 @@ int main_menu() {
   }
 }
 
-// add a randomly generated goat
-void add_goat(list<Goat> &trip, string names[], string colors[]) {
+// add a randomly generated goat to the set
+void add_goat(set<Goat> &trip, string names[], string colors[]) {
   string name = names[rand() % SZ_NAMES];
   int age = rand() % (MAX_AGE + 1);
   string color = colors[rand() % SZ_COLORS];
 
   Goat newGoat(name, age, color);
-  trip.push_back(newGoat);
 
-  cout << endl << "Goat added successfully!" << endl;
-  cout << "Name: " << newGoat.get_name() << endl;
-  cout << "Age: " << newGoat.get_age() << endl;
-  cout << "Color: " << newGoat.get_color() << endl;
+  pair<set<Goat>::iterator, bool> result = trip.insert(newGoat);
+
+  if (result.second) {
+    cout << endl << "Goat added successfully!" << endl;
+    cout << "Name: " << newGoat.get_name() << endl;
+    cout << "Age: " << newGoat.get_age() << endl;
+    cout << "Color: " << newGoat.get_color() << endl;
+  }
+  else {
+    cout << endl << "This goat already exists in the set." << endl;
+  }
+
   cout << "Total goats: " << trip.size() << endl;
 }
 
-// display the current goats in numbered format
-void display_trip(list<Goat> trip) {
+// display the goats in sorted order
+void display_trip(set<Goat> trip) {
   cout << endl << "Current Goat Trip:" << endl;
 
   if (trip.empty()) {
@@ -142,7 +150,7 @@ void display_trip(list<Goat> trip) {
 }
 
 // display goats and validate the selected number
-int select_goat(list<Goat> trip) {
+int select_goat(set<Goat> trip) {
   display_trip(trip);
 
   if (trip.empty())
@@ -169,8 +177,8 @@ int select_goat(list<Goat> trip) {
   }
 }
 
-// delete the selected goat from the list
-void delete_goat(list<Goat> &trip) {
+// delete the selected goat from the set
+void delete_goat(set<Goat> &trip) {
   if (trip.empty()) {
     cout << endl << "No goats available to delete." << endl;
     return;
@@ -181,7 +189,7 @@ void delete_goat(list<Goat> &trip) {
   if (selection == 0)
     return;
 
-  list<Goat>::iterator it = trip.begin();
+  set<Goat>::iterator it = trip.begin();
 
   for (int i = 1; i < selection; i++)
     it++;
